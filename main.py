@@ -25,7 +25,7 @@ import argparse
 parser = argparse.ArgumentParser(description="Run model instance")
 #parser.add_argument("--instance", type=int, required=True, help="Instance number (e.g., 1–5)")
 parser.add_argument("--year", type=int, required=True, help="Year (e.g., 2025 or 2050)")
-parser.add_argument("--carboncost", type=str, required=True, choices=["low", "exp", "high"], help="Specify carbon cost level")
+parser.add_argument("--carboncost", type=str, required=True, choices=["low", "exp", "high", "zero", "extreme"], help="Specify carbon cost level")
 #parser.add_argument("--case", type=str, required=True, choices=["wide_small", "wide_medium", "wide_large", "deep_small", "deep_medium", "deep_large", "balanced_small", "balanced_medium", "balanced_large", "max_in", "max_out", "git_push"], help="Specify case type")
 #parser.add_argument("--cluster", type=str, required=True, choices=["random", "season", "guided", "diversed"], help="Specify case type")
 #parser.add_argument("--industry", type=str, required=True, choices = ["pulp", "alu"], help="Specify industry type")
@@ -415,6 +415,12 @@ elif carboncost == "high" and year == 2025:
     data.load(filename=os.path.join("Par_CostEmission_high_2025.tab"), param=model.Cost_Emission, format = "table")
 elif carboncost == "high" and year == 2050:
     data.load(filename=os.path.join("Par_CostEmission_high_2050.tab"), param=model.Cost_Emission, format = "table")
+elif carboncost == "zero":
+    data.load(filename=os.path.join("Par_CostEmission_zero.tab"), param=model.Cost_Emission, format = "table")
+elif carboncost == "extreme" and year == 2050:
+    data.load(filename=os.path.join("Par_CostEmission_extreme_2050.tab"), param=model.Cost_Emission, format = "table")
+elif carboncost == "extreme" and year == 2025:
+    data.load(filename=os.path.join("Par_CostEmission_extreme_2025.tab"), param=model.Cost_Emission, format = "table")
 else:
     raise ValueError("Invalid instance or year. Please check the values.")
 
