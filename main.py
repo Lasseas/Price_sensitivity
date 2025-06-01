@@ -1082,6 +1082,10 @@ def CAPEX_limitations(model):
     return model.I_inv <= model.Max_CAPEX
 model.CAPEXLim = pyo.Constraint(rule=CAPEX_limitations)
 
+def No_PV_investment(model):
+        return model.v_new_tech['PV'] == 0
+model.NoPVInvestment = pyo.Constraint(rule=No_PV_investment)
+
 ##############################################################
 ##################### CARBON EMISSION LIMIT ##################
 ##############################################################
