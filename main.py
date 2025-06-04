@@ -524,6 +524,10 @@ model.I_OPEX_printOut = pyo.Var()
 model.RealTime_Import = pyo.Var()
 model.RealTime_Export = pyo.Var()
 model.Dummy_Grid_utilization = pyo.Var()
+model.gas_boil_ccs_utilization = pyo.Var()
+model.gas_boil_utilization = pyo.Var()
+model.el_boil_utilization = pyo.Var()
+model.HP_utilization = pyo.Var()
 """
 OBJECTIVE
 """ 
@@ -743,6 +747,55 @@ def dummyfuel_utilization_rule(model):
         if (n, t, "Dummy_Grid", "DummyFuel", o) in model.y_in
     )
 model.DummyFuelUtilizationConstraint = pyo.Constraint(rule=dummyfuel_utilization_rule)
+
+def gasboil_utilization_rule(model):
+    return model.gas_boil_utilization == sum(
+        model.Node_Probability[n] *
+        model.y_out[n, t, "GasBoiler", e, o]
+        for (n, stage) in model.Nodes_in_stage
+        for t in model.Time
+        for e in model.EnergyCarrier if e in ["LT", "MT"]
+        for o in model.Mode_of_operation
+        if (n, t, "GasBoiler", e, o) in model.y_out
+    )
+model.GasBoilUtilizationConstraint = pyo.Constraint(rule=gasboil_utilization_rule)
+
+def gasboil_ccs_utilization_rule(model):
+    return model.gas_boil_ccs_utilization == sum(
+        model.Node_Probability[n] *
+        model.y_out[n, t, "GasBoiler_CCS", e, o]
+        for (n, stage) in model.Nodes_in_stage
+        for t in model.Time
+        for e in model.EnergyCarrier if e in ["LT", "MT"]
+        for o in model.Mode_of_operation
+        if (n, t, "GasBoiler_CCS", e, o) in model.y_out
+    )
+model.GasBoilCCSUtilizationConstraint = pyo.Constraint(rule=gasboil_ccs_utilization_rule)
+
+def electricboiler_utilization_rule(model):
+    return model.el_boil_utilization == sum(
+        model.Node_Probability[n] *
+        model.y_out[n, t, "ElectricBoiler", e, o]
+        for (n, stage) in model.Nodes_in_stage
+        for t in model.Time
+        for e in model.EnergyCarrier if e in ["LT", "MT"]
+        for o in model.Mode_of_operation
+        if (n, t, "ElectricBoiler", e, o) in model.y_out
+    )
+model.ElboilUtilizationConstraint = pyo.Constraint(rule=electricboiler_utilization_rule)
+
+
+def HP_utilization_rule(model):
+    return model.HP_utilization == sum(
+        model.Node_Probability[n] *
+        model.y_out[n, t, "HP_MT", e, o]
+        for (n, stage) in model.Nodes_in_stage
+        for t in model.Time
+        for e in model.EnergyCarrier if e in ["LT", "MT"]
+        for o in model.Mode_of_operation
+        if (n, t, "HP_MT", e, o) in model.y_out
+    )
+model.HPUtilizationConstraint = pyo.Constraint(rule=HP_utilization_rule)
 
 
 ########################################################################################################
@@ -1138,7 +1191,7 @@ if case != "max_out":
 
 
 our_model.dual = pyo.Suffix(direction=pyo.Suffix.IMPORT) #Import dual values into solver results
-import pdb; pdb.set_trace()
+#import pdb; pdb.set_trace()
 
 
 """
@@ -1372,6 +1425,7 @@ excel_filename = save_results_to_excel(our_model, run_label, result_folder)
 objective_value = pyo.value(our_model.Objective)
 num_Nodes = len(our_model.Nodes) if hasattr(our_model, "Nodes") else "Unknown"
 num_days = len(our_model.Period)
+num_timesteps = len(our_model.Time)
 objective_scaled_to_year = (objective_value / num_days) * 365
 investment_cost = pyo.value(our_model.I_inv)
 investment_cost_scaled_to_year = (investment_cost/num_days) * 365
@@ -1389,6 +1443,12 @@ GridTariff_cost = pyo.value(our_model.I_GT)
 Imbalance_cost_import = pyo.value(our_model.RealTime_Import)
 Imbalance_cost_export = pyo.value(our_model.RealTime_Export)
 DummyFuel_utilization = pyo.value(our_model.Dummy_Grid_utilization)
+gasboil_utilization = pyo.value(our_model.gas_boil_utilization)
+gasboil_ccs_utilization = pyo.value(our_model.gas_boil_ccs_utilization)
+elboil_utilization = pyo.value(our_model.el_boil_utilization)
+HP_utilization = pyo.value(our_model.HP_utilization)
+
+
 
 
 
@@ -1500,6 +1560,13 @@ if case != "max_out":
     Imbalance cost related to Real-time adjustment import: {Imbalance_cost_import:.2f}
     Imbalance cost related to Real-time adjustment export: {Imbalance_cost_export:.2f}
     Total DummyFuel used by Dummy Grid: {DummyFuel_utilization:,.2f}
+
+    Total supplied energy by gas boiler: {gasboil_utilization:,.2f}
+    Total supplied energy by gas boiler with CCS: {gasboil_ccs_utilization:,.2f}
+    Total supplied energy by electric boiler: {elboil_utilization:,.2f}
+    Total supplied energy by heat pump: {HP_utilization:,.2f}
+
+    ---------------------- In Persentages -----------------
     """
 
 
