@@ -10,7 +10,7 @@ GasBoiler	0
 GasBoiler_CCS	0
 CHP	0
 CHP_CCS	0
-Biogas_Grid	1000
+Biogas_Grid	2000
 CH4_Grid	1000
 CH4_H2_Mixer	0
 DieselReserveGenerator	0

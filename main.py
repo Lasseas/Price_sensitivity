@@ -36,8 +36,8 @@ args = parser.parse_args()
 
 year = args.year
 carboncost = args.carboncost
-case = "balanced_large"
-cluster = "guided"
+case = "wide_large"
+cluster = "season"
 filenumber = args.file
 industrytype = "pulp"
 instance = 1
@@ -1138,7 +1138,7 @@ if case != "max_out":
 
 
 our_model.dual = pyo.Suffix(direction=pyo.Suffix.IMPORT) #Import dual values into solver results
-#import pdb; pdb.set_trace()
+import pdb; pdb.set_trace()
 
 
 """
