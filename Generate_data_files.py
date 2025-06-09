@@ -35,11 +35,11 @@ def run_everything(excel_path, result_folder, filenumber, instance, year, cluste
     "GasBoiler_CCS": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}, #1 = LT (CH4 mix), 2 = MT (CH4 mix), 3 = LT (CH4), 4 = MT (CH4), 5 = LT (Biogas), 6 = MT (Biogas)
     "CHP": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}, #1 = LT (CH4 mix), 2 = MT (CH4 mix), 3 = LT (CH4), 4 = MT (CH4), 5 = LT (Biogas), 6 = MT (Biogas)
     "CHP_CCS": {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}, #1 = LT (CH4 mix), 2 = MT (CH4 mix), 3 = LT (CH4), 4 = MT (CH4), 5 = LT (Biogas), 6 = MT (Biogas)
-    "Biogas_Grid": {1: 64.5, 2: 0}, #1 = Import, 2 = Export
-    "CH4_Grid": {1: 39.479, 2: 0}, #1 = Import, 2 = Export
+    "Biogas_Grid": {1: 64.5, 2: 64.5}, #1 = Import, 2 = Export
+    "CH4_Grid": {1: 39.479, 2: 39.479}, #1 = Import, 2 = Export
     "CH4_H2_Mixer": {1: 0},
     "DieselReserveGenerator": {1: 148.8},
-    "H2_Grid": {1: 150.1502, 2: 0}, #1 = Import, 2 = Export
+    "H2_Grid": {1: 150.1502, 2: 150.1502}, #1 = Import, 2 = Export
     "Dummy_Grid": {1: 0} #1 = Export
     }
 
